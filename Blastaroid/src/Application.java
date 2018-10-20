@@ -7,7 +7,7 @@ public class Application {
         jf.setBounds(10, 10, 700, 600);
         jf.setResizable(false); // don't make it resizeable
         jf.setVisible(true);
-        jf.setDefaultCloseOperation(3); // Can also make use if constant JFrame.EXIT_ON_CLOSE
+        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
 
