@@ -1,3 +1,5 @@
+import blastaroid.Gameplay;
+
 import javax.swing.*;
 
 public class Application {
@@ -8,6 +10,8 @@ public class Application {
         jf.setResizable(false); // don't make it resizeable
         jf.setVisible(true);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        jf.add(new Gameplay());
 
 
 

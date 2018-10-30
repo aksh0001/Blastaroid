@@ -7,6 +7,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+/**
+ * This class forms the core gameplay of Blastaroid.
+ * Possible extensions for Blastaroid: Break apart entities (blocks, ball, slide) into separate classes.
+ * E.g. Certain blocks might give the player more points
+ *
+ * @author a.k
+ */
 public class Gameplay extends JPanel implements ActionListener, KeyListener {
     /**
      * Boolean flag to indicate start of gameplay
@@ -60,7 +67,7 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
 
     public void paint(Graphics g) {
         // background
-        g.setColor(Color.black);
+        g.setColor(Color.black); // choose black 'paintbrush'
         g.fillRect(1, 1, 692, 592);
         // border
         g.setColor(Color.yellow);
@@ -72,12 +79,27 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
         g.fillRect(playerX, 550, 100, 8);
         // ball
         g.setColor(Color.blue);
-        g.fillRect(ballX, ballY, 20, 20);
+        g.fillOval(ballX, ballY, 20, 20);
+
+        g.dispose();
 
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        timer.start();
+        if (play){  // player has pressed an arrow key
+            ballX += ballXDir;
+            ballY += ballYDir;
+            if (ballX < 0)
+                ballXDir = -ballXDir;
+            if (ballY < 0)
+                ballYDir = -ballYDir;
+            if (ballX > 670)
+                ballXDir = -ballXDir;
+
+        }
+        repaint(); // repaint canvas
 
     }
 
