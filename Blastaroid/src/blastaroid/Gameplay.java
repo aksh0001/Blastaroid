@@ -56,12 +56,18 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
      */
     private Timer timer;
 
+    /**
+     * Represents the bricks in the game
+     */
+    private MapGenerator map;
+
     public Gameplay() {
         this.addKeyListener(this);
         this.setFocusable(true);
         this.setFocusTraversalKeysEnabled(true);
         this.timer = new Timer(this.delay, this);
         this.timer.start();
+        this.map = new MapGenerator(3, 7);
 
     }
 
