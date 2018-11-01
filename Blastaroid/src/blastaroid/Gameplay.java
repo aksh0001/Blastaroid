@@ -30,7 +30,7 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
     /**
      * The ball's x position
      **/
-    private int ballX = 120;
+    private int ballX = 270;
     /**
      * The ball's y position
      **/
@@ -38,19 +38,19 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
     /**
      * The ball's x direction
      **/
-    private int ballXDir = -1;
+    private int ballXDir = 1;
     /**
      * The ball's y direction
      */
-    private int ballYDir = -2;
+    private int ballYDir = 1;
     /**
      * The player's x postion
      */
     private int playerX = 310;
     /**
-     * The delay for the timer (acts as the ball speed)
+     * The delay for the timer (acts as the refresh rate)
      */
-    private int delay = 8;
+    private int delay = 5;
     /**
      * Timer for the game
      */
@@ -60,6 +60,11 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
      * Represents the bricks in the game
      */
     private MapGenerator map;
+
+    /**
+     * Message to render to the user when the game is over
+     */
+    private static final String gameOver = "Game Over! Your score is ";
 
     public Gameplay() {
         this.addKeyListener(this);
@@ -75,19 +80,35 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
         // background
         g.setColor(Color.black); // choose black 'paintbrush'
         g.fillRect(1, 1, 692, 592);
-        // draw map
+        // draw bricks
         this.map.draw((Graphics2D) g);
         // border
         g.setColor(Color.yellow);
         g.fillRect(0, 0, 3, 592);
         g.fillRect(0, 0, 692, 3);
         g.fillRect(691, 0, 3, 592);
+        // player score
+        g.setColor(Color.white);
+        g.setFont(new Font("serif", Font.BOLD, 25));
+        g.drawString(Integer.toString(playerScore), 590, 30);
         // slide
         g.setColor(Color.green);
         g.fillRect(playerX, 550, 100, 8);
         // ball
         g.setColor(Color.blue);
         g.fillOval(ballX, ballY, 20, 20);
+
+        // check for game over
+        if (ballY > 570) {
+            play = false;
+            ballYDir = ballXDir = 0;
+            g.setColor(Color.RED);
+            g.setFont(new Font("serif", Font.BOLD, 30));
+            g.drawString(gameOver, 190, 300);
+
+            g.setFont(new Font("serif", Font.BOLD, 20));
+            g.drawString("Press Enter to restart", 230, 350);
+        }
 
         g.dispose();
 
@@ -100,6 +121,36 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
             // Check if ball intersects with paddle
             if (new Rectangle(ballX, ballY, 20, 20).intersects(new Rectangle(playerX, 550, 100, 8))) { // really hacky
                 ballYDir = -ballYDir;
+            }
+
+            // Horrible code -> quadratic time to check intersection at each action performed
+            // TODO: Might be a good spot for a PQ data structure to track priority collisions (go through ALGS1)
+            exitBrickCheck:
+            for (int i = 0; i < this.map.bricks.length; i++) {
+                for (int j = 0; j < this.map.bricks[0].length; j++) {
+                    if (this.map.bricks[i][j] > 0) {
+                        // detect intersection
+                        int brickX = j * map.brickWidth + 80;
+                        int brickY = i * map.brickHeight + 50;
+                        int brickWidth = map.brickWidth;
+                        int brickHeight = map.brickHeight;
+
+                        Rectangle rect = new Rectangle(brickX, brickY, brickWidth, brickHeight);
+                        Rectangle ballRect = new Rectangle(ballX, ballY, 20, 20);
+                        Rectangle brickRect = rect;
+                        if (ballRect.intersects(brickRect)) {
+                            this.map.setBrickValue(0, i, j); // clear brick
+                            this.totalTiles--;
+                            this.playerScore += 15;
+                            // Check left and right intersection
+                            if (ballX + 19 <= brickRect.x || ballX + 1 >= brickRect.x + brickRect.width) {
+                                ballYDir = -ballXDir;
+                            } else
+                                ballYDir = -ballYDir;
+                            break exitBrickCheck;
+                        }
+                    }
+                }
             }
 
             ballX += ballXDir;
@@ -135,6 +186,17 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
                 playerX = 10; // Keep it within the border
             else
                 moveLeft();
+        } else if (!play && e.getKeyCode() == KeyEvent.VK_ENTER) { // If user wants to restart
+            play = true;
+            ballX = 270;
+            ballY = 350;
+            ballXDir = 1;
+            ballYDir = 1;
+            playerScore = 0;
+            playerX = 310;
+            totalTiles = 21;
+            map = new MapGenerator(3, 7);
+            repaint();
         }
     }
 

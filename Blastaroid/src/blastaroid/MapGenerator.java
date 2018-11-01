@@ -3,7 +3,7 @@ package blastaroid;
 import java.awt.*;
 
 /**
- * This class generates the map/setting of Blastaroid by initialising a 2D array representing bricks.
+ * This class generates the bricks/setting of Blastaroid by initialising a 2D array representing bricks.
  *
  * @author a.k
  */
@@ -11,7 +11,7 @@ public class MapGenerator {
     /**
      * This field represents the collection of bricks. We use a 2D array data structure to model this. Could use HT's
      */
-    public int[][] map;
+    public int[][] bricks;
     /**
      * The width of each brick
      */
@@ -31,10 +31,10 @@ public class MapGenerator {
     public MapGenerator(int row, int col) // Inject row/col primitive constructor dependency (don't know if that's a thing)
     {
         if (row < 1 || col < 1) throw new IllegalArgumentException("Error: No bricks initialised");
-        this.map = new int[row][col];
+        this.bricks = new int[row][col];
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
-                this.map[i][j] = 1; // 1 represents an active brick
+                this.bricks[i][j] = 1; // 1 represents an active brick
             }
         }
         this.brickHeight = 150 / row; // Will use hacky way for now
@@ -48,9 +48,9 @@ public class MapGenerator {
      * @complexity O(N ^ 2) where N is the number of bricks
      */
     public void draw(Graphics2D g) {
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[1].length; j++) {
-                if (this.map[i][j] > 0) {
+        for (int i = 0; i < bricks.length; i++) {
+            for (int j = 0; j < bricks[1].length; j++) {
+                if (this.bricks[i][j] > 0) {
                     g.setColor(Color.GRAY);
                     g.fillRect(j * brickWidth + 80, i * brickHeight + 50, brickWidth, brickHeight);
 
@@ -62,5 +62,16 @@ public class MapGenerator {
             }
         }
 
+    }
+
+    /**
+     * Sets the associated brick to value
+     * @param value 0 or 1 indicating the presence of a brick.
+     * @param row the associated row of the brick.
+     * @param col the associated column of the brick.
+     */
+    public void setBrickValue(int value, int row, int col) {
+        if (value > 1 || value < 0) throw new IllegalArgumentException("Error: wrong value");
+        this.bricks[row][col] = value;
     }
 }
