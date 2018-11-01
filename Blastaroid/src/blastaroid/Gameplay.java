@@ -48,7 +48,7 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
      */
     private int playerX = 310;
     /**
-     * The delay for the timer
+     * The delay for the timer (acts as the ball speed)
      */
     private int delay = 8;
     /**
@@ -88,9 +88,15 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         timer.start();
-        if (play){  // player has pressed an arrow key
+        if (play) {  // player has pressed an arrow key
+            // Check if ball intersects with paddle
+            if (new Rectangle(ballX, ballY, 20, 20).intersects(new Rectangle(playerX, 550, 100, 8))) { // really hacky
+                ballYDir = -ballYDir;
+            }
+
             ballX += ballXDir;
             ballY += ballYDir;
+            // Rebound the ball
             if (ballX < 0)
                 ballXDir = -ballXDir;
             if (ballY < 0)
