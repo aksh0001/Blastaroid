@@ -45,15 +45,19 @@ public class MapGenerator {
      * This method draws all existing bricks.
      *
      * @param g a graphics object to draw.
-     * @complexity O(N^2) where N is the number of bricks
-     *
+     * @complexity O(N ^ 2) where N is the number of bricks
      */
     public void draw(Graphics2D g) {
-        for (int i = 0; i < map[0].length; i++) {
+        for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[1].length; j++) {
                 if (this.map[i][j] > 0) {
                     g.setColor(Color.GRAY);
                     g.fillRect(j * brickWidth + 80, i * brickHeight + 50, brickWidth, brickHeight);
+
+                    // Define borders
+                    g.setStroke(new BasicStroke(3));
+                    g.setColor(Color.black);
+                    g.drawRect(j * brickWidth + 80, i * brickHeight + 50, brickWidth, brickHeight);
                 }
             }
         }

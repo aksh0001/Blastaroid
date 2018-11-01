@@ -2,6 +2,10 @@ import blastaroid.Gameplay;
 
 import javax.swing.*;
 
+/**
+ * Class that starts Blastaroid.
+ * Disclaimer: I know the code is smelly
+ */
 public class Application {
     public static void main(String[] args) {
         JFrame jf = new JFrame(); // Create a new JFrame
