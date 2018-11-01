@@ -98,6 +98,23 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
         g.setColor(Color.blue);
         g.fillOval(ballX, ballY, 20, 20);
 
+        // check if all bricks have been cleared
+        if (this.totalTiles <= 0)
+        {
+            play = false;
+            ballYDir = ballXDir = 0;
+            g.setColor(Color.RED);
+            g.setFont(new Font("serif", Font.BOLD, 30));
+            g.drawString("You Won! Your score is ", 190, 300);
+
+            g.setColor(Color.ORANGE);
+            g.drawString(Integer.toString(playerScore), 540, 300);
+
+            g.setColor(Color.yellow);
+            g.setFont(new Font("serif", Font.BOLD, 20));
+            g.drawString("Press Enter to restart", 230, 350);
+        }
+
         // check for game over
         if (ballY > 570) {
             play = false;
@@ -106,6 +123,10 @@ public class Gameplay extends JPanel implements ActionListener, KeyListener {
             g.setFont(new Font("serif", Font.BOLD, 30));
             g.drawString(gameOver, 190, 300);
 
+            g.setColor(Color.ORANGE);
+            g.drawString(Integer.toString(playerScore), 540, 300);
+
+            g.setColor(Color.yellow);
             g.setFont(new Font("serif", Font.BOLD, 20));
             g.drawString("Press Enter to restart", 230, 350);
         }
